@@ -8,12 +8,6 @@ $(function() {
 	let lat = "";
   let lng = "";
 	let appendhtml = "";
-	let str = "";
-	let newstr = "";
-	let phone = "";
-	let rating = "";
-	let icon = "";
-	let address = "";
 
 
 
