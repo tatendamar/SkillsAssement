@@ -15,7 +15,7 @@ $(function() {
 	let icon = "";
 	let address = "";
 
-	
+
 
 	$("#search").click(function(){
 		$(this).val("");
@@ -23,11 +23,11 @@ $(function() {
 
 	//blur the placeholder info
 	$("#search").blur(function(){
-		if ($(this).val() == "") {
+		if ($(this).val() === "") {
 			$(this).val("Eg: Food");
 		}
 
-		if ($(this).val() != "Eg: Food") {
+		if ($(this).val() !== "Eg: Food") {
 			$(this).addClass("focus");
 		} else {
 			$(this).removeClass("focus");
@@ -53,10 +53,10 @@ $(function() {
 		//Get venues
 		$.ajax({
 	  		type: "GET",
-	  		url: "https://api.foursquare.com/v2/venues/explore?ll="+lat+","+lng+"&client_id=IF0ZQE4JNYCYYT5OOLW5T4V5AU5I2ZBG4YRSMPKCW2QASQJL&client_secret=LREHGTLS3VUSMGBQ5CIBBISE1KQB4KADNXPLTX11A2ZTIFMQ&v=20130619&query="+$("#search").val()+"",
+	  	  url: 'https://api.foursquare.com/v2/venues/search?ll='+lat+','+lng+'&limit=10&client_id=IF0ZQE4JNYCYYT5OOLW5T4V5AU5I2ZBG4YRSMPKCW2QASQJL&client_secret=LREHGTLS3VUSMGBQ5CIBBISE1KQB4KADNXPLTX11A2ZTIFMQ&v=20130619',
 	  		success: function(data) {
 				$("#locations").show();
-				var dataobj = data.response.groups[0].items;
+		  	var venue = data.response.venues;
 				$("#locations").html("");
 
 				//Build the map using data.
@@ -69,32 +69,8 @@ $(function() {
 				map = new google.maps.Map(document.getElementById('map'), myOptions);
 
 				// Loop through the dataobj
-				$.each(dataobj, function() {
-					if (this.venue.categories[0]) {
-							str = this.venue.categories[0].icon.prefix;
-							newstr = str.substring(0, str.length - 1);
-							icon = newstr+this.venue.categories[0].icon.suffix;
-						} else {
-							icon = "";
-						}
-
-						if (this.venue.contact.formattedPhone) {
-							phone = "Phone:"+this.venue.contact.formattedPhone;
-						} else {
-							phone = "";
-						}
-
-						if (this.venue.location.address) {
-							address = '<p class="subinfo">'+this.venue.location.address+'<br>';
-						} else {
-							address = "";
-						}
-
-						if (this.venue.rating) {
-							rating = '<span class="rating">'+this.venue.rating+'</span>';
-						}
-
-						appendhtml = '<div class="venue"><h2><span>'+this.venue.name+'<img class="icon" src="'+icon+'"> '+rating+'</span></h2>'+address+phone+'</p><p><strong>Total Checkins:</strong> '+this.venue.stats.checkinsCount+'</p></div>';
+		    for(var i = 0; i < venue.length; i++){
+						appendhtml = '<div class="venue"><h2><span>'+venue[i].name+'<br />'+'<img class="icon" src="'+ venue[i].categories[0].icon.prefix +'bg_88'+venue[i].categories[0].icon.suffix +'"></p><p><strong>Total Checkins:</strong> '+venue[i].stats.checkinsCount+'</p></div>';
 						$("#locations").append(appendhtml);
 
 						//Create markers
@@ -106,18 +82,20 @@ $(function() {
 								},
 								markerOptions = {
 								map: map,
-								position: new google.maps.LatLng(this.venue.location.lat, this.venue.location.lng),
-								title: this.venue.name,
+								position: new google.maps.LatLng(venue[i].location.lat, venue[i].location.lng),
+								title: venue[i].name,
 								animation: google.maps.Animation.DROP,
 								icon: markerImage,
 								optimized: false
 								},
 								marker = new google.maps.Marker(markerOptions)
 
-							});
+							}
 						}
 					});
 				}
+
+
          //Build map
 				function mapbuild() {
 					$("#locations").hide();
@@ -129,7 +107,6 @@ $(function() {
 					},
 					map = new google.maps.Map(document.getElementById('map'), myOptions);
 				}
-
 				mapbuild();
 
 			});
