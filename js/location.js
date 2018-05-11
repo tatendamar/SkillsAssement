@@ -48,7 +48,7 @@ $(function() {
 		// the first ajax request returns the venueId
 		$.ajax({
 	  		type: "GET",
-	  	  url: 'https://api.foursquare.com/v2/venues/search?ll='+lat+','+lng+'&limit=20&client_id=IF0ZQE4JNYCYYT5OOLW5T4V5AU5I2ZBG4YRSMPKCW2QASQJL&client_secret=LREHGTLS3VUSMGBQ5CIBBISE1KQB4KADNXPLTX11A2ZTIFMQ&v=20130619',
+	  	  url: 'https://api.foursquare.com/v2/venues/search?ll='+lat+','+lng+'&limit=20&client_id=CLIENT-ID&client_secret=CLIENT-SECRET&v=20130619',
 	  		success: function(data1) {
 					var venue1 = data1.response.venues;
            for(x in venue1){
@@ -56,7 +56,7 @@ $(function() {
 					$.ajax({
 					dataType: 'jsonp',
 					type: 'GET',
-					url: 'https://api.foursquare.com/v2/venues/'+ venue1[x].id+'/photos?&oauth_token=GIHKMXXEZ2SDSTZYOQ3F5PPTZFXJDIJTAUFUFD2HZI2EYOYH&limit=10&v=20130619',
+					url: 'https://api.foursquare.com/v2/venues/'+ venue1[x].id+'/photos?&oauth_token=AUTH-TOKEN&limit=10&v=20130619',
 					success: function(data){
 		   		$("#locations").show();
 	    	 var venue = data.response.photos.items;
